@@ -1,10 +1,9 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { Outlet } from "react-router";
 
-import { ReactNode } from "react";
-
-export default function AuthenticatedLayout({ children }: { children: ReactNode }) {
+export default function AuthenticatedLayout() {
 
   return (
     <div className="[--header-height:calc(theme(spacing.14))]">
@@ -13,7 +12,7 @@ export default function AuthenticatedLayout({ children }: { children: ReactNode 
         <div className="flex flex-1">
           <AppSidebar />
           <SidebarInset>
-            { children }
+            <Outlet />
           </SidebarInset>
         </div>
       </SidebarProvider>
