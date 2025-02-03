@@ -24,8 +24,8 @@ import ParklyLogo from "/public/parkly.png"
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Parkly Admin",
+    email: "admin@parkly.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
