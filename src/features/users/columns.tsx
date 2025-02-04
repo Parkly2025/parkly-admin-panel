@@ -20,7 +20,6 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title='Username' />
     ),
     cell: ({ row }) => <span>{row.getValue('username')}</span>,
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     accessorKey: 'email',
@@ -28,7 +27,6 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title='Email' />
     ),
     cell: ({ row }) => <span>{row.getValue('email')}</span>,
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     accessorKey: 'firstName',
@@ -36,7 +34,6 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title='First Name' />
     ),
     cell: ({ row }) => <span>{row.getValue('firstName')}</span>,
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     accessorKey: 'lastName',
@@ -44,7 +41,6 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title='Last Name' />
     ),
     cell: ({ row }) => <span>{row.getValue('lastName')}</span>,
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     accessorKey: 'role',
@@ -54,7 +50,6 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <Badge variant='outline'>{row.getValue('role')}</Badge>
     ),
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     id: 'actions',
