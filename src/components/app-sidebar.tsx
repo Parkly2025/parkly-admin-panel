@@ -1,9 +1,10 @@
 import * as React from "react"
 import {
   LifeBuoy,
-  // Map,
-  // Settings2,
-  SquareTerminal,
+  UsersRound,
+  BookCopy,
+  CircleParking,
+  LandPlot
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -28,49 +29,29 @@ const data = {
   },
   navMain: [
     {
-      title: "Data",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Users",
+      url: "/dashboard/users",
+      icon: UsersRound,
       isActive: true,
-      items: [
-        {
-          title: "Spots",
-          url: "#",
-        },
-        {
-          title: "Bookings",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
     },
-    
-    // {
-    //   title: "Settings",
-    //   url: "#",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Team",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Billing",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Limits",
-    //       url: "#",
-    //     },
-    //   ],
-    // },
+    {
+      title: "Reservations",
+      url: "/dashboard/reservations",
+      icon: BookCopy,
+      isActive: true,
+    },
+    {
+      title: "Parking Spots",
+      url: "/dashboard/parking-spots",
+      icon: CircleParking,
+      isActive: true,
+    },
+    {
+      title: "Parking Area",
+      url: "/dashboard/parking-areas",
+      icon: LandPlot,
+      isActive: true,
+    }
   ],
   navSecondary: [
     {

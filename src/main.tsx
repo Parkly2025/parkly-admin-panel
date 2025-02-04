@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router";
 import './index.css'
 import AuthentificatedLayout from '@/components/layout/authentificated-layout.tsx'
-import Dashboard from "@/app/dashboard/page.tsx"
+import Dashboard from "@/app/dashboard/page.tsx";
+import Users from "@/app/dashboard/users/page.tsx";
 // import Payments from "@/app/payments/page.tsx"
 import ComingSoon from './components/coming-soon.tsx'
 import { LoginForm } from '@/components/login-form.tsx'
@@ -17,6 +18,10 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/login" element={<LoginForm />}/>
           <Route path="/dashboard/" element={<AuthentificatedLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path='/dashboard/users' element={<Users />} />
+            <Route path='/dashboard/reservations' element={<Users />} />
+            <Route path='/dashboard/parking-spots' element={<Users />} />
+            <Route path='/dashboard/parking-areas' element={<Users />} />
             {/* <Route path="/dashboard/payments/" element={<Payments />} /> */}
           </Route>
           <Route path="*" element={<NotFoundError/>}/>
