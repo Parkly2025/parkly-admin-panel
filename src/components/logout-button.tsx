@@ -1,5 +1,6 @@
 // src/components/LogoutButton.tsx
 import React from 'react';
+import { LogOut } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { logout } from '@/store/slices/authSlice';
@@ -20,8 +21,9 @@ export const LogoutButton: React.FC = () => {
   };
 
   return (
-    <span onClick={handleLogout}>
+    <div onClick={handleLogout} className='flex flex-row items-center gap-4 cursor-pointer'>
+      <LogOut />
       Logout
-    </span>
+    </div>
   );
 };
