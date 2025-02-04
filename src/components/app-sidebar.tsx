@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Link } from "react-router"
 import {
   LifeBuoy,
   UsersRound,
@@ -72,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link to="#">
                 <div className="">
                   <img src="/parkly.png" className="size-8" />
                 </div>
@@ -80,7 +81,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <span className="truncate font-semibold">Parkly 2025</span>
                   <span className="truncate text-xs">Enterprise LLC Corp</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
