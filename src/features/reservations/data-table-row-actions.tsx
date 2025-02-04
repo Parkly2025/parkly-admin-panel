@@ -22,13 +22,18 @@ interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
+
+function dummy(data: unknown) {
+  return data;
+}
+
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   //TODO: Reservation actions
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   const reservation = reservationSchema.parse(row.original)
-
+  dummy(reservation); // FIXME: delete it
   // const { setOpen, setCurrentRow } = useTasks()
 
   return (
