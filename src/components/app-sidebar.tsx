@@ -19,8 +19,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import ParklyLogo from "/public/parkly.png"
-
 
 const data = {
   user: {
@@ -95,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
                 <div className="">
-                  <img src={ParklyLogo} className="size-8" />
+                  <img src="/parkly.png" className="size-8" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Parkly 2025</span>
