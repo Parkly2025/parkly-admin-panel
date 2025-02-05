@@ -19,7 +19,7 @@ import {
 import { labels } from './data/data'
 import { taskSchema } from './data/schema'
 import { useDispatch } from 'react-redux'
-import { setOpen, setCurrentRow } from '@/store/slices/taskSlice'
+import { setOpen, setCurrentRow } from '@/store/slices/tasksSlice'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>

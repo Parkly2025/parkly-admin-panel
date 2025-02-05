@@ -2,19 +2,21 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import authReducer from './slices/authSlice';
-import tasksReducer from './slices/taskSlice';
+import tasksReducer from './slices/tasksSlice';
+import usersReducer from './slices/usersSlice';
 import storage from 'redux-persist/lib/storage'; // Uses localStorage for web
 
 // Configure persist settings
 const persistConfig = {
   key: 'root',
   storage,
-  // whitelist: ['auth'], // Optionally, only persist specific slices
+  whitelist: ['auth'], // Optionally, only persist specific slices
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  tasks: tasksReducer
+  tasks: tasksReducer,
+  users: usersReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

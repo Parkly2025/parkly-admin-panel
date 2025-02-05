@@ -22,33 +22,35 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { Task } from '@/features/tasks/data/schema'
+// import { SelectDropdown } from '@/components/select-dropdown'
+import { User } from '@/features/users/data/schema'
 
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
-  currentRow?: Task
+  currentRow?: User
 }
 
 const formSchema = z.object({
-  title: z.string().min(1, 'Title is required.'),
-  status: z.string().min(1, 'Please select a status.'),
-  label: z.string().min(1, 'Please select a label.'),
-  priority: z.string().min(1, 'Please choose a priority.'),
+  username: z.string().min(1, 'Username is required.'),
+  email: z.string().email('Please enter a valid email.'),
+  firstName: z.string().min(1, 'First name is required.'),
+  lastName: z.string().min(1, 'Last name is required.'),
+  role: z.string().min(1, 'Please select a role.'),
 })
 type TasksForm = z.infer<typeof formSchema>
 
-export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
+export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   const isUpdate = !!currentRow
 
   const form = useForm<TasksForm>({
     resolver: zodResolver(formSchema),
     defaultValues: currentRow ?? {
-      title: '',
-      status: '',
-      label: '',
-      priority: '',
+      username: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      role: '',
     },
   })
 
@@ -79,8 +81,8 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           <SheetTitle>{isUpdate ? 'Update' : 'Create'} User</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the task by providing necessary info.'
-              : 'Add a new task by providing necessary info.'}
+              ? 'Update the user by providing necessary info.'
+              : 'Add a new user by providing necessary info.'}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
@@ -92,10 +94,10 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           >
             <FormField
               control={form.control}
-              name='title'
+              name='username'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder='Enter a title' />
                   </FormControl>
@@ -105,29 +107,47 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
             />
             <FormField
               control={form.control}
-              name='status'
+              name='email'
               render={({ field }) => (
                 <FormItem className='space-y-1'>
-                  <FormLabel>Status</FormLabel>
-                  <SelectDropdown
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    placeholder='Select dropdown'
-                    items={[
-                      { label: 'In Progress', value: 'in progress' },
-                      { label: 'Backlog', value: 'backlog' },
-                      { label: 'Todo', value: 'todo' },
-                      { label: 'Canceled', value: 'canceled' },
-                      { label: 'Done', value: 'done' },
-                    ]}
-                  />
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder='Enter an email' />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name='label'
+              name='firstName'
+              render={({ field }) => (
+                <FormItem className='space-y-1'>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder='Enter a first name' />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='lastName'
+              render={({ field }) => (
+                <FormItem className='space-y-1'>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder='Enter a last name' />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name='role'
               render={({ field }) => (
                 <FormItem className='relative space-y-3'>
                   <FormLabel>Label</FormLabel>
@@ -139,59 +159,21 @@ export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
                     >
                       <FormItem className='flex items-center space-x-3 space-y-0'>
                         <FormControl>
-                          <RadioGroupItem value='documentation' />
+                          <RadioGroupItem value='ADMIN' />
                         </FormControl>
-                        <FormLabel className='font-normal'>
-                          Documentation
-                        </FormLabel>
+                        <FormLabel className='font-normal'>Admin</FormLabel>
                       </FormItem>
                       <FormItem className='flex items-center space-x-3 space-y-0'>
                         <FormControl>
-                          <RadioGroupItem value='feature' />
+                          <RadioGroupItem value='USER' />
                         </FormControl>
-                        <FormLabel className='font-normal'>Feature</FormLabel>
+                        <FormLabel className='font-normal'>User</FormLabel>
                       </FormItem>
                       <FormItem className='flex items-center space-x-3 space-y-0'>
                         <FormControl>
-                          <RadioGroupItem value='bug' />
+                          <RadioGroupItem value='GUEST' />
                         </FormControl>
-                        <FormLabel className='font-normal'>Bug</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='priority'
-              render={({ field }) => (
-                <FormItem className='relative space-y-3'>
-                  <FormLabel>Priority</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className='flex flex-col space-y-1'
-                    >
-                      <FormItem className='flex items-center space-x-3 space-y-0'>
-                        <FormControl>
-                          <RadioGroupItem value='high' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>High</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center space-x-3 space-y-0'>
-                        <FormControl>
-                          <RadioGroupItem value='medium' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Medium</FormLabel>
-                      </FormItem>
-                      <FormItem className='flex items-center space-x-3 space-y-0'>
-                        <FormControl>
-                          <RadioGroupItem value='low' />
-                        </FormControl>
-                        <FormLabel className='font-normal'>Low</FormLabel>
+                        <FormLabel className='font-normal'>Guest</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>

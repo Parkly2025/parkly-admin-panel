@@ -1,29 +1,28 @@
 import { toast } from '@/hooks/use-toast'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { TasksMutateDrawer } from './tasks-mutate-drawer'
+import { UsersMutateDrawer } from './users-mutate-drawer'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/store'
-import { setOpen, setCurrentRow } from '@/store/slices/tasksSlice'
+import { setOpen, setCurrentRow } from '@/store/slices/usersSlice'
 
-export function TasksDialogs() {
+export function UsersDialogs() {
   const dispatch = useDispatch()
-  const { open, currentRow } = useSelector((state: RootState) => state.tasks)
+  const { open, currentRow } = useSelector((state: RootState) => state.users)
 
   return (
     <>
-      <TasksMutateDrawer
-        key="task-create"
+      <UsersMutateDrawer
+        key="user-create"
         open={open === 'create'}
         onOpenChange={() => { 
-          dispatch(setCurrentRow(null))
-          // dispatch(setOpen('create')) 
-        } }
+          dispatch(setOpen('create'))
+        }}
       />
 
       {currentRow && (
         <>
-          <TasksMutateDrawer
-            key={`task-update-${currentRow.id}`}
+          <UsersMutateDrawer
+            key={`user-update-${currentRow.id}`}
             open={open === 'update'}
             onOpenChange={() => {
               dispatch(setOpen('update'))
@@ -35,7 +34,7 @@ export function TasksDialogs() {
           />
 
           <ConfirmDialog
-            key="task-delete"
+            key="user-delete"
             destructive
             open={open === 'delete'}
             onOpenChange={() => {
@@ -50,7 +49,7 @@ export function TasksDialogs() {
                 dispatch(setCurrentRow(null))
               }, 500)
               toast({
-                title: 'The following task has been deleted:',
+                title: 'The following user has been deleted:',
                 description: (
                   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
                     <code className="text-white">
@@ -61,10 +60,10 @@ export function TasksDialogs() {
               })
             }}
             className="max-w-md"
-            title={`Delete this task: ${currentRow.id}?`}
+            title={`Delete this user: ${currentRow.id}?`}
             desc={
               <>
-                You are about to delete a task with the ID{' '}
+                You are about to delete a user with the ID{' '}
                 <strong>{currentRow.id}</strong>.<br />
                 This action cannot be undone.
               </>
