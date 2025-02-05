@@ -24,6 +24,7 @@ export function LoginForm({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     //TODO: API CALL
+
     const userData = { id: '123', username: 'johndoe', email: 'johndoe@mail.com' }; 
     dispatch(login(userData));
     navigate('/dashboard'); 

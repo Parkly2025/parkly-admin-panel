@@ -18,6 +18,8 @@ import {
 // import { useTasks } from '../context/tasks-context'
 import { labels } from './data/data'
 import { taskSchema } from './data/schema'
+import { useDispatch } from 'react-redux'
+import { setOpen, setCurrentRow } from '@/store/slices/taskSlice'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -28,7 +30,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const task = taskSchema.parse(row.original)
 
-  // const { setOpen, setCurrentRow } = useTasks()
+  const dispatch = useDispatch()
 
   return (
     <DropdownMenu modal={false}>
@@ -44,8 +46,8 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem
           onClick={() => {
-            // setCurrentRow(task)
-            // setOpen('update')
+            dispatch(setCurrentRow(task))
+            dispatch(setOpen('update'))
           }}
         >
           Edit
@@ -68,8 +70,8 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            // setCurrentRow(task)
-            // setOpen('delete')
+            dispatch(setCurrentRow(task))
+            dispatch(setOpen('delete'))
           }}
         >
           Delete
