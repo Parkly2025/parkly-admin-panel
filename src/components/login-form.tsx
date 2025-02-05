@@ -1,3 +1,4 @@
+import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { login } from '@/store/slices/authSlice';
@@ -14,71 +15,74 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+import { useLoginUserMutation } from '@/services/api';
+
+type LoginFormInputs = {
+  username: string;
+};
+
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  
+  const [ loginApi, { error } ] = useLoginUserMutation();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    //TODO: API CALL
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormInputs>();
 
-    const userData = { id: '123', username: 'johndoe', email: 'johndoe@mail.com' }; 
-    dispatch(login(userData));
-    navigate('/dashboard'); 
+  
+  const onSubmit = async (data: LoginFormInputs) => {
+    try {
+      const response = await loginApi(data).unwrap();
+      console.log(response);
+      dispatch(login(response));
+      navigate('/dashboard');
+    } catch (err: any) {
+      console.error(err);
+    }
   };
 
   return (
-      <div className={cn("flex flex-col gap-6", className)} {...props}>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
-            <CardDescription>
-              Enter your username below to login to your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    // type="email"
-                    placeholder="minecraftEnjoyer2004"
-                    required
-                  />
-                </div>
-                {/* <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
-                    required
-                  />
-                </div> */}
-                {/* <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
-                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div>
-                  <Input id="password" type="password" required />
-                </div> */}
-                <Button type="submit" className="w-full">
-                  Login
-                </Button>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your username below to login to your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-6">
+              {error && (
+                <p className="text-red-500 text-sm">
+                  {(error as any)?.data?.message || "Login failed. Try again."}
+                </p>
+              )}
+              <div className="grid gap-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  placeholder="minecraftEnjoyer2004"
+                  {...register("username", { required: "Username is required" })}
+                />
+                {errors.username && (
+                  <p className="text-red-500 text-sm">{errors.username.message}</p>
+                )}
               </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-  )
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

@@ -7,7 +7,6 @@ import {
   CircleParking,
   LandPlot
 } from "lucide-react"
-
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
@@ -21,13 +20,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+
 
 const data = {
-  user: {
-    name: "Parkly Admin",
-    email: "admin@parkly.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Users",
@@ -64,6 +61,8 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const user = useSelector((state: RootState) => state.auth.user);
+
   return (
     <Sidebar
       className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
@@ -91,7 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user && <NavUser user={user} /> }
       </SidebarFooter>
     </Sidebar>
   )

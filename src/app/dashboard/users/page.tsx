@@ -1,9 +1,7 @@
-import { DataTable } from '@/features/users/data-table'
-import { columns } from '@/features/users/columns'
-import { users } from '@/features/users/data/users'
 import { Main } from '@/components/layout/main'
 import { UsersDialogs } from '@/features/users/users-dialogs'
 import { PrimaryButtons } from '@/components/primary-buttons'
+import { UsersTable } from '@/features/users/users-table'
 import { setOpen } from '@/store/slices/usersSlice'
 
 export default function Page() {
@@ -20,7 +18,7 @@ export default function Page() {
           <PrimaryButtons setOpen={setOpen} />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <DataTable data={users} columns={columns} />
+            <UsersTable />
         </div>
       </Main>
       <UsersDialogs />

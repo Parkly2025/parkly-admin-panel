@@ -1,18 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { RootState } from '@/store';
+import type { User } from '@/features/users/data/schema';
+import UniversalCookie from 'universal-cookie';
 
 // =======================================================
 // Schema Types (based on OpenAPI definitions)
 // =======================================================
-
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  role: 'ADMIN' | 'USER' | 'GUEST';
-}
 
 export interface CreateUserDTO {
   username: string;
@@ -122,16 +115,21 @@ export interface Link {
 // Create the RTK Query API service with endpoints
 // =======================================================
 
+const cookies = new UniversalCookie;
+
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://parkly-parkly.azuremicroservices.io/api/',
     prepareHeaders: (headers, { getState }) => {
       const { auth } = getState() as RootState;
-      if (auth.isAuthenticated && auth.user) {
-        // For example, if you had a token: 
-        // headers.set('Authorization', `Bearer ${auth.user.token}`);
-        headers.set('X-User', auth.user.username);
+      if (auth.isAuthenticated && auth.user && auth.user?.role) {
+        cookies.set('userRole', auth.user.role, {
+          path: '/',
+          domain: '.azuremicroservices.io',
+          secure: true,
+          sameSite: 'lax', 
+        });
       }
       return headers;
     },
