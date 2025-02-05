@@ -33,6 +33,7 @@ export function LoginForm({
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormInputs>();
 
@@ -40,9 +41,12 @@ export function LoginForm({
   const onSubmit = async (data: LoginFormInputs) => {
     try {
       const response = await loginApi(data).unwrap();
-      console.log(response);
-      dispatch(login(response));
-      navigate('/dashboard');
+      if (response.role !== 'ADMIN') {
+        setError('username', { message: 'You are not authorized to login in Admin area' });
+      } else {
+        dispatch(login(response));
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       console.error(err);
     }
