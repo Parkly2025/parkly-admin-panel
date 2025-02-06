@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,40 +12,50 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-
+} from "@/components/ui/popover";
 
 interface ComboboxDemoProps {
   options: {
-    value: string
-    label: string
-  }[]
-  value?: string
-  onChange?: (value: string) => void
-  placeholder?: string
-  emptyText?: string
+    value: string;
+    label: string;
+  }[];
+  value?: string;
+  onChange?: (value: string) => void;
+  placeholder?: string;
+  emptyText?: string;
 }
 
-export function ComboboxDemo({ 
-  options, 
-  value: defaultValue = "", 
+export function ComboboxDemo({
+  options,
+  value: defaultValue = "",
   onChange,
   placeholder = "Select option...",
-  emptyText = "No options found."
+  emptyText = "No options found.",
 }: ComboboxDemoProps) {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState(defaultValue)
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(defaultValue);
+  const [search, setSearch] = React.useState("");
+
+  const filteredOptions = React.useMemo(() => {
+    if (!search) return options;
+
+    return options.filter(
+      (option) =>
+        option.label.toLowerCase().includes(search.toLowerCase()) ||
+        option.value.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [options, search]);
 
   const handleSelect = (currentValue: string) => {
-    setValue(currentValue)
-    onChange?.(currentValue)
-    setOpen(false)
-  }
+    setValue(currentValue);
+    onChange?.(currentValue);
+    setOpen(false);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -63,12 +73,12 @@ export function ComboboxDemo({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder={`Search...`} />
+        <Command shouldFilter={false}>
+          <CommandInput placeholder={`Search...`} onValueChange={setSearch} />
           <CommandList>
             <CommandEmpty>{emptyText}</CommandEmpty>
             <CommandGroup>
-              {options.map((option) => (
+              {filteredOptions.map((option) => (
                 <CommandItem
                   key={option.value}
                   value={option.value}
@@ -88,5 +98,5 @@ export function ComboboxDemo({
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
