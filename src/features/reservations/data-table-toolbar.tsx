@@ -15,14 +15,14 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className='flex items-center justify-between'>
-      <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
+      <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2 flex-wrap'>
         <Input
           placeholder='Filter by Reservation ID...'
           value={(table.getColumn('id')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('id')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by Parking Spot...'
@@ -30,7 +30,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('parkingSpotId')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by User ID...'
@@ -38,7 +38,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('userId')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by Start Time...'
@@ -46,7 +46,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('startTime')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by End Time...'
@@ -54,7 +54,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('endTime')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by Total Cost...'
@@ -62,7 +62,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('totalCost')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         {isFiltered && (
           <Button

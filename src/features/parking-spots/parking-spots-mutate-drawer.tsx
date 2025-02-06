@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch"
 // import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { ComboboxDemo } from "@/components/combox-demo";
+
 import {
   Sheet,
   SheetClose,
@@ -28,6 +30,7 @@ import {
 import { ParkingSpot } from "@/features/parking-spots/data/schema";
 import { 
   // useUpdateParkingSpotMutation, //FIXME
+  useGetAllParkingAreasQuery, 
   useCreateParkingSpotMutation 
 } from "@/services/api";
 
@@ -53,6 +56,15 @@ export function ParkingSpotsMutateDrawer({
   const isUpdate = !!currentRow;
   // const [updateParkingSpot] = useUpdateParkingSpotMutation();
   const [createParkingSpot] = useCreateParkingSpotMutation();
+
+  const { data: parkingAreas, error, isLoading }= useGetAllParkingAreasQuery({
+    page: 0
+  });
+
+  const parkingAreaOptions = parkingAreas?.content.map(area => ({
+    label: `${area.name} (${area.address})`,
+    value: area.id.toString()
+  })) ?? []
 
   const form = useForm<ParkingSpotForm>({
     resolver: zodResolver(formSchema),
@@ -105,6 +117,16 @@ export function ParkingSpotsMutateDrawer({
     onOpenChange(false);
   };
 
+
+  if (isLoading) {
+    return <div>Loading parking areas...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">Error fetching parking areas.</div>;
+  }
+
+
   return (
     <Sheet
       open={open}
@@ -145,24 +167,27 @@ export function ParkingSpotsMutateDrawer({
                 </FormItem>
               )}
             />
+
             <FormField
-              control={form.control}
-              name="parkingAreaId"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>Parking Area ID</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                      placeholder="Enter parking area ID"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                  control={form.control}
+                  name="parkingAreaId"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel>Parking Area</FormLabel>
+                      <FormControl>
+                        <ComboboxDemo
+                          options={parkingAreaOptions}
+                          value={field.value?.toString()}
+                          onChange={(value) => field.onChange(Number(value))}
+                          placeholder="Select parking area..."
+                          emptyText={isLoading ? "Loading..." : "No parking areas found"}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
             <FormField
               control={form.control}
               name="isAvailable"

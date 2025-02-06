@@ -36,9 +36,10 @@ import { Reservation } from "@/features/reservations/data/schema";
 import {
   useUpdateReservationMutation,
   useCreateReservationMutation,
-  // useGetAllUsersQuery,
-  // useGetAllParkingAreasQuery
+  useGetAllUsersQuery,
+  useGetAllParkingSpotsQuery
 } from "@/services/api";
+import { ComboboxDemo } from "@/components/combox-demo";
 // import { Combobox } from '@/components/ui/combobox'
 
 interface Props {
@@ -60,18 +61,26 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   const isUpdate = !!currentRow;
   const [updateReservation] = useUpdateReservationMutation();
   const [createReservation] = useCreateReservationMutation();
-  // const { data: users, isLoading: isLoadingUsers } = useGetAllUsersQuery({ page: 0 })
-  // const { data: parkingAreas, isLoading: isLoadingParkingAreas } = useGetAllParkingAreasQuery({ page: 0 })
+  const { data: users, isLoading: isLoadingUsers } = useGetAllUsersQuery({ 
+    page: 0,
+    size: 1000 
+  })
+  
+  const { data: parkingSpots, isLoading: isLoadingParkingSpots } = useGetAllParkingSpotsQuery({ 
+    page: 0,
+    size: 1000 
+  })
 
-  // const userOptions = users?.content.map(user => ({
-  //   label: `${user.firstName} ${user.lastName}`,
-  //   value: user.id.toString()
-  // })) ?? []
+  const userOptions = users?.content.map(user => ({
+    label: `${user.firstName} ${user.lastName}`,
+    value: user.id.toString()
+  })) ?? []
 
-  // const parkingAreaOptions = parkingAreas?.content.map(area => ({
-  //   label: area.name,
-  //   value: area.id.toString()
-  // })) ?? []
+  const parkingSpotOptions = parkingSpots?.content.map(spot => ({
+    label: `${spot.spotNumber}`,
+    value: spot.Id.toString()
+  })) ?? []
+
 
   const form = useForm<ReservationsForm>({
     resolver: zodResolver(formSchema),
@@ -150,44 +159,17 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           >
             <FormField
               control={form.control}
-              name="parkingSpotId"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>Parking Spot</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Enter a parking spot" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="userId"
               render={({ field }) => (
                 <FormItem className="space-y-1">
                   <FormLabel>User</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Enter a user" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* <FormField
-              control={form.control}
-              name="userId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User</FormLabel>
-                  <FormControl>
-                    <Combobox
+                    <ComboboxDemo
                       options={userOptions}
                       value={field.value?.toString()}
-                      onValueChange={(value) => field.onChange(Number(value))}
-                      placeholder="Select user"
-                      emptyText="No users found"
-                      loading={isLoadingUsers}
+                      onChange={(value) => field.onChange(Number(value))}
+                      placeholder="Select user..."
+                      emptyText={isLoadingUsers ? "Loading..." : "No users found"}
                     />
                   </FormControl>
                   <FormMessage />
@@ -199,22 +181,21 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
               control={form.control}
               name="parkingSpotId"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Parking Area</FormLabel>
+                <FormItem className="space-y-1">
+                  <FormLabel>Parking Spot</FormLabel>
                   <FormControl>
-                    <Combobox
-                      options={parkingAreaOptions}
+                    <ComboboxDemo
+                      options={parkingSpotOptions}
                       value={field.value?.toString()}
-                      onValueChange={(value) => field.onChange(Number(value))}
-                      placeholder="Select parking area"
-                      emptyText="No parking areas found"
-                      loading={isLoadingParkingAreas}
+                      onChange={(value) => field.onChange(Number(value))}
+                      placeholder="Select parking spot..."
+                      emptyText={isLoadingParkingSpots ? "Loading..." : "No parking spots found"}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+              />
             <FormField
               control={form.control}
               name="startTime"

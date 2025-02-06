@@ -23,7 +23,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('username')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by email...'
@@ -31,7 +31,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('email')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by first name...'
@@ -39,7 +39,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('firstName')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <Input
           placeholder='Filter by last name...'
@@ -47,7 +47,7 @@ export function DataTableToolbar<TData>({
           onChange={(event) =>
             table.getColumn('lastName')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[200px]'
         />
         <div className='flex gap-x-2'>
           {table.getColumn('role') && (
