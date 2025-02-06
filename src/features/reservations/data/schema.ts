@@ -4,8 +4,8 @@ import { z } from 'zod'
 // IRL, you will have a schema for your data models.
 export const reservationSchema = z.object({
   id: z.number(),
-  parkingSpot: z.string(),
-  userId: z.string(),
+  parkingSpotId: z.number(),
+  userId: z.number(),
   startTime: z.string(),
   endTime: z.string(),
   totalCost: z.number()

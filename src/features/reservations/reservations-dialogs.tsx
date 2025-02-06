@@ -4,10 +4,39 @@ import { UsersMutateDrawer } from './reservations-mutate-drawer'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/store'
 import { setOpen, setCurrentRow } from '@/store/slices/reservationsSlice'
+import { useDeleteReservationMutation } from '@/services/api'
 
 export function ReservationDialogs() {
   const dispatch = useDispatch()
   const { open, currentRow } = useSelector((state: RootState) => state.reservatios)
+  const [deleteReservation] = useDeleteReservationMutation()
+
+  const handleConfirm = async () => {
+    try {
+      if (currentRow?.id) {
+        await deleteReservation(currentRow.id).unwrap()
+        toast({
+          title: 'Success. Reservation deleted successfully',
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(currentRow, null, 2)}
+              </code>
+            </pre>
+          )
+        })
+        dispatch(setCurrentRow(null))
+        dispatch(setOpen(null))
+      }
+    } catch (error) {
+      console.error("Error", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete reservation",
+        variant: "destructive",
+      })
+    }
+  }
 
   return (
     <>
@@ -43,22 +72,7 @@ export function ReservationDialogs() {
                 dispatch(setCurrentRow(null))
               }, 500)
             }}
-            handleConfirm={() => {
-              dispatch(setOpen(null))
-              setTimeout(() => {
-                dispatch(setCurrentRow(null))
-              }, 500)
-              toast({
-                title: 'The following user has been deleted:',
-                description: (
-                  <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                      {JSON.stringify(currentRow, null, 2)}
-                    </code>
-                  </pre>
-                ),
-              })
-            }}
+            handleConfirm={handleConfirm}
             className="max-w-md"
             title={`Delete this user: ${currentRow.id}?`}
             desc={

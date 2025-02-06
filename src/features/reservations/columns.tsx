@@ -15,11 +15,11 @@ export const columns: ColumnDef<Reservation>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'parkingSpot',
+    accessorKey: 'parkingSpotId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Parking Spot' />
     ),
-    cell: ({ row }) => <span>{row.getValue('parkingSpot')}</span>
+    cell: ({ row }) => <span>{row.getValue('parkingSpotId')}</span>
   },
   {
     accessorKey: 'userId',

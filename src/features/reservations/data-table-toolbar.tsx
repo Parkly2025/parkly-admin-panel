@@ -26,9 +26,9 @@ export function DataTableToolbar<TData>({
         />
         <Input
           placeholder='Filter by Parking Spot...'
-          value={(table.getColumn('parkingSpot')?.getFilterValue() as string) ?? ''}
+          value={(table.getColumn('parkingSpotId')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
-            table.getColumn('parkingSpot')?.setFilterValue(event.target.value)
+            table.getColumn('parkingSpotId')?.setFilterValue(event.target.value)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />

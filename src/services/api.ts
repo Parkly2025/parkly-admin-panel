@@ -178,7 +178,7 @@ export const api = createApi({
         searchQueryParameter?: string;
       }
     >({
-      query: ({ page, size = 50, sortDirection = 'asc', searchQuery, searchQueryParameter }) => ({
+      query: ({ page, size = 1000, sortDirection = 'asc', searchQuery, searchQueryParameter }) => ({
         url: `users/page/${page}`,
         params: { size, sortDirection, searchQuery, searchQueryParameter },
       }),
@@ -204,12 +204,14 @@ export const api = createApi({
         method: 'PUT',
         body: data,
       }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'Reservation', id }]
     }),
     deleteReservation: builder.mutation<void, number>({
       query: (id) => ({
         url: `reservations/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: () => [{ type: 'Reservation', id: 'LIST' }]
     }),
     createReservation: builder.mutation<ReturnReservationDTO, CreateReservationDTO>({
       query: (data) => ({
@@ -217,24 +219,39 @@ export const api = createApi({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: () => [{ type: 'Reservation', id: 'LIST' }]
     }),
     getAllUserReservations: builder.query<
       Page<ReturnReservationDTO>,
       { id: number; page: number; size?: number; sortDirection?: string }
     >({
-      query: ({ id, page, size = 10, sortDirection = 'asc' }) => ({
+      query: ({ id, page, size = 1000, sortDirection = 'asc' }) => ({
         url: `reservations/user/${id}/page/${page}`,
         params: { size, sortDirection },
       }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.content.map(({ id }) => ({ type: 'Reservation' as const, id })),
+              { type: 'Reservation', id: 'LIST' },
+            ]
+          : [{ type: 'Reservation', id: 'LIST' }],
     }),
     getAllReservations: builder.query<
       Page<ReturnReservationDTO>,
       { page: number; size?: number; sortDirection?: string }
     >({
-      query: ({ page, size = 10, sortDirection = 'asc' }) => ({
+      query: ({ page, size = 1000, sortDirection = 'asc' }) => ({
         url: `reservations/page/${page}`,
         params: { size, sortDirection },
       }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.content.map(({ id }) => ({ type: 'Reservation' as const, id })),
+              { type: 'Reservation', id: 'LIST' },
+            ]
+          : [{ type: 'Reservation', id: 'LIST' }],
     }),
 
     // ---------------------------
@@ -267,7 +284,7 @@ export const api = createApi({
       Page<ReturnParkingSpotDTO>,
       { page: number; size?: number; sortBy?: string; sortDirection?: string }
     >({
-      query: ({ page, size = 10, sortBy = 'spotNumber', sortDirection = 'asc' }) => ({
+      query: ({ page, size = 1000, sortBy = 'spotNumber', sortDirection = 'asc' }) => ({
         url: `parking-spots/page/${page}`,
         params: { size, sortBy, sortDirection },
       }),
@@ -315,7 +332,7 @@ export const api = createApi({
         searchQueryParameter?: string;
       }
     >({
-      query: ({ page, size = 10, sortDirection = 'asc', searchQuery, searchQueryParameter }) => ({
+      query: ({ page, size = 1000, sortDirection = 'asc', searchQuery, searchQueryParameter }) => ({
         url: `parking-areas/page/${page}`,
         params: { size, sortDirection, searchQuery, searchQueryParameter },
       }),
