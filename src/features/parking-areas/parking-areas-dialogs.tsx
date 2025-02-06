@@ -4,15 +4,47 @@ import { ParkingAreasMutateDrawer } from './parking-areas-mutate-drawer'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/store'
 import { setOpen, setCurrentRow } from '@/store/slices/parkingAreasSlice'
+import { useDeleteParkingAreaMutation } from '@/services/api'
+
 
 export function ParkingAreasDialogs() {
   const dispatch = useDispatch()
   const { open, currentRow } = useSelector((state: RootState) => state.parkingAreas)
 
+  const [deleteParkingArea] = useDeleteParkingAreaMutation()
+  
+  
+  const handleConfirm = async () => {
+    try {
+      if (currentRow?.id) {
+        await deleteParkingArea(currentRow.id).unwrap()
+        toast({
+          title: 'Success. Reservation deleted successfully',
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(currentRow, null, 2)}
+              </code>
+            </pre>
+          )
+        })
+        dispatch(setCurrentRow(null))
+        dispatch(setOpen(null))
+      }
+    } catch (error) {
+      console.error("Error", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete reservation",
+        variant: "destructive",
+      })
+    }
+  }
+
   return (
     <>
       <ParkingAreasMutateDrawer
-        key="parking-spots-create"
+        key="parking-areas-create"
         open={open === 'create'}
         onOpenChange={() => { 
           dispatch(setOpen('create'))
@@ -22,7 +54,7 @@ export function ParkingAreasDialogs() {
       {currentRow && (
         <>
           <ParkingAreasMutateDrawer
-            key={`parking-spots-update-${currentRow.id}`}
+            key={`parking-areas-update-${currentRow.id}`}
             open={open === 'update'}
             onOpenChange={() => {
               dispatch(setOpen('update'))
@@ -34,7 +66,7 @@ export function ParkingAreasDialogs() {
           />
 
           <ConfirmDialog
-            key="parking-spots-delete"
+            key="parking-areas-delete"
             destructive
             open={open === 'delete'}
             onOpenChange={() => {
@@ -43,22 +75,7 @@ export function ParkingAreasDialogs() {
                 dispatch(setCurrentRow(null))
               }, 500)
             }}
-            handleConfirm={() => {
-              dispatch(setOpen(null))
-              setTimeout(() => {
-                dispatch(setCurrentRow(null))
-              }, 500)
-              toast({
-                title: 'The following user has been deleted:',
-                description: (
-                  <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                      {JSON.stringify(currentRow, null, 2)}
-                    </code>
-                  </pre>
-                ),
-              })
-            }}
+            handleConfirm={handleConfirm}
             className="max-w-md"
             title={`Delete this user: ${currentRow.id}?`}
             desc={

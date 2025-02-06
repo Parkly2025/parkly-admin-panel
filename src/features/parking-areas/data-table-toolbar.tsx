@@ -30,11 +30,12 @@ export function DataTableToolbar<TData>({
             column={table.getColumn("city")}
             title="City"
             options={[
-              { value: "New York", label: "New York" },
-              { value: "San Francisco", label: "San Francisco" },
-              { value: "Chicago", label: "Chicago" },
-              { value: "Miami", label: "Miami" },
-              { value: "Los Angeles", label: "Los Angeles" },
+              { value: "Gdańsk", label: "Gdańsk" },
+              { value: "Kraków", label: "Kraków" },
+              { value: "Metropolis", label: "Metropolis" },
+              { value: "Poznań", label: "Poznań" },
+              { value: "Warsaw", label: "Warsaw" },
+              { value: "Wrocław", label: "Wrocław" },
             ]}
           />
         )}
@@ -43,9 +44,11 @@ export function DataTableToolbar<TData>({
             column={table.getColumn("hourlyRate")}
             title="Price Range"
             options={[
-              { value: "0-10", label: "$0-$10" },
-              { value: "11-20", label: "$11-$20" },
-              { value: "21-30", label: "$21-$30" },
+              { value: "0-3", label: "$0-$3" },
+              { value: "3-5", label: "$3-$5" },
+              { value: "5-7", label: "$5-$7" },
+              { value: "7-10", label: "$7-$10" },
+              { value: "10+", label: "$10+" },
             ]}
           />
         )}

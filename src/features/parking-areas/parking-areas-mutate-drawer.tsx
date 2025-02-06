@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/sheet";
 // import { SelectDropdown } from '@/components/select-dropdown'
 import { ParkingArea } from "@/features/parking-areas/data/schema";
+import { useUpdateParkingAreaMutation, useCreateParkingAreaMutation } from '@/services/api'
 
 interface Props {
   open: boolean;
@@ -53,6 +54,8 @@ export function ParkingAreasMutateDrawer({
   currentRow,
 }: Props) {
   const isUpdate = !!currentRow;
+  const [updateParkingArea] = useUpdateParkingAreaMutation()
+  const [createParkingArea] = useCreateParkingAreaMutation()
 
   const form = useForm<ParkingAreaForm>({
     resolver: zodResolver(formSchema),
@@ -66,19 +69,45 @@ export function ParkingAreasMutateDrawer({
     },
   });
 
-  const onSubmit = (data: ParkingAreaForm) => {
-    // do something with the form data
-    onOpenChange(false);
-    form.reset();
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  };
+  const handleClose = () => {
+    form.reset()
+    onOpenChange(false)
+  }
+
+  const onSubmit = async (data: ParkingAreaForm) => {
+    try {
+      if (currentRow?.id && updateParkingArea) {
+        await updateParkingArea({
+          id: currentRow.id,
+          data: { 
+            id: currentRow.id,
+            ...data 
+          }
+        }).unwrap()
+      } else {
+        await createParkingArea(data).unwrap()
+      }
+
+      handleClose()
+      toast({
+        title: isUpdate ? "Parking Area Updated" : "Parking Area Created",
+        description: "Operation completed successfully"
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: "Error. Failed to process parking area",
+        description:(
+          (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">{JSON.stringify(error, null, 2)}</code>
+            </pre>
+          )
+        ),
+        variant: "destructive",
+      })
+    }
+  }
 
   return (
     <Sheet
@@ -181,6 +210,7 @@ export function ParkingAreasMutateDrawer({
                         min="-180"
                         max="180"
                         {...field}
+                        // value={field.value || '0'}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                         placeholder="-180 to 180"
                       />
@@ -203,6 +233,7 @@ export function ParkingAreasMutateDrawer({
                         min="-90"
                         max="90"
                         {...field}
+                        // value={field.value || '0'}
                         onChange={(e) => field.onChange(Number(e.target.value))}
                         placeholder="-90 to 90"
                       />
@@ -218,7 +249,7 @@ export function ParkingAreasMutateDrawer({
           <SheetClose asChild>
             <Button variant="outline">Close</Button>
           </SheetClose>
-          <Button form="tasks-form" type="submit">
+          <Button form="parking-area-form" type="submit">
             Save changes
           </Button>
         </SheetFooter>
