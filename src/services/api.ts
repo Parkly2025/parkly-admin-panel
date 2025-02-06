@@ -294,7 +294,7 @@ export const api = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.content.map(({ id }) => ({ type: 'ParkingSpot' as const, id })),
+              ...result.content.map(({ Id }) => ({ type: 'ParkingSpot' as const, Id })),
               { type: 'ParkingSpot', id: 'LIST' },
             ]
           : [{ type: 'ParkingSpot', id: 'LIST' }],
@@ -318,12 +318,14 @@ export const api = createApi({
         method: 'PUT',
         body: data,
       }),
+      invalidatesTags: () => [{ type: 'ParkingArea', id: 'LIST' }]
     }),
     deleteParkingArea: builder.mutation<void, number>({
       query: (id) => ({
         url: `parking-areas/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: () => [{ type: 'ParkingArea', id: 'LIST' }]
     }),
     createParkingArea: builder.mutation<ParkingArea, CreateParkingAreaDTO>({
       query: (data) => ({
@@ -331,6 +333,7 @@ export const api = createApi({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: () => [{ type: 'ParkingArea', id: 'LIST' }]
     }),
     getAllParkingAreas: builder.query<
       Page<ParkingArea>,
@@ -346,6 +349,13 @@ export const api = createApi({
         url: `parking-areas/page/${page}`,
         params: { size, sortDirection, searchQuery, searchQueryParameter },
       }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.content.map(({ id }) => ({ type: 'ParkingArea' as const, id })),
+              { type: 'ParkingArea', id: 'LIST' },
+            ]
+          : [{ type: 'ParkingArea', id: 'LIST' }],
     }),
 
     // ---------------------------
