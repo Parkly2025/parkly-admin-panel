@@ -90,11 +90,11 @@ export function ParkingAreasMutateDrawer({
     >
       <SheetContent className="flex flex-col">
         <SheetHeader className="text-left">
-          <SheetTitle>{isUpdate ? "Update" : "Create"} Parking Spot</SheetTitle>
+          <SheetTitle>{isUpdate ? "Update" : "Create"} Parking Area</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? "Update the parking spot by providing necessary info."
-              : "Add a new parking spot by providing necessary info."}
+              ? "Update the parking area by providing necessary info."
+              : "Add a new parking area by providing necessary info."}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
