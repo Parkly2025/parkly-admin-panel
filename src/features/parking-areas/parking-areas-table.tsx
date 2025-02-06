@@ -1,6 +1,6 @@
 import { DataTable } from '@/features/parking-areas/data-table'
 import { columns } from '@/features/parking-areas/columns'
-import { parkingAreas } from '@/features/parking-areas/data/parking-areas'
+// import { parkingAreas } from '@/features/parking-areas/data/parking-areas'
 import { useGetAllParkingAreasQuery } from '@/services/api'
 
 export function ResevationsTable() {
