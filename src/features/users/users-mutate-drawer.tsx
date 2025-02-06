@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/sheet'
 // import { SelectDropdown } from '@/components/select-dropdown'
 import { User } from '@/features/users/data/schema'
+import { useUpdateUserMutation, useCreateUserMutation } from '@/services/api'
 
 interface Props {
   open: boolean
@@ -32,18 +33,21 @@ interface Props {
 }
 
 const formSchema = z.object({
-  username: z.string().min(1, 'Username is required.'),
+  username: z.string().min(1, 'Username is required.').regex(/^[a-zA-Z0-9_-]+$/, 'Username must contain only letters and numbers'),
   email: z.string().email('Please enter a valid email.'),
   firstName: z.string().min(1, 'First name is required.'),
   lastName: z.string().min(1, 'Last name is required.'),
   role: z.string().min(1, 'Please select a role.'),
 })
-type TasksForm = z.infer<typeof formSchema>
+type UsersForm = z.infer<typeof formSchema>
 
 export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
+  const [updateUser] = useUpdateUserMutation()
+  const [createUser] = useCreateUserMutation()
+
   const isUpdate = !!currentRow
 
-  const form = useForm<TasksForm>({
+  const form = useForm<UsersForm>({
     resolver: zodResolver(formSchema),
     defaultValues: currentRow ?? {
       username: '',
@@ -54,18 +58,47 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
     },
   })
 
-  const onSubmit = (data: TasksForm) => {
-    // do something with the form data
-    onOpenChange(false)
+  const handleClose = () => {
     form.reset()
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-          <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+    onOpenChange(false)
+  }
+
+  const onSubmit = async (data: UsersForm) => {
+    // do something with the form data
+    try {
+      if (currentRow?.id && updateUser) {
+        console.log('updateUser')
+        await updateUser({ 
+          id: currentRow.id, 
+          data: { 
+            id: currentRow.id,
+            ...data 
+          }
+        }).unwrap()
+      } else {
+        console.log('createUser')
+        await createUser(data).unwrap()
+      }
+      handleClose()
+      toast({
+        title: 'You submitted the following values:',
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+            <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: 'An error occurred',
+        description: (
+          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+            <code className='text-white'>{JSON.stringify(error, null, 2)}</code>
+          </pre>
+        ),
+      })
+    }
   }
 
   return (
@@ -150,7 +183,7 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
               name='role'
               render={({ field }) => (
                 <FormItem className='relative space-y-3'>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>Role</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -185,7 +218,7 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
         </Form>
         <SheetFooter className='gap-2'>
           <SheetClose asChild>
-            <Button variant='outline'>Close</Button>
+            <Button variant='outline' onClick={handleClose}>Close</Button>
           </SheetClose>
           <Button form='tasks-form' type='submit'>
             Save changes

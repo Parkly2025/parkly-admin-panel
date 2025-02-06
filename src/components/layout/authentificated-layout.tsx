@@ -5,6 +5,7 @@ import { Outlet } from "react-router";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router";
 import { RootState } from "@/store";
+import { Toaster } from '@/components/ui/toaster'
 
 export default function AuthenticatedLayout() {
   const isAuthenticated = useSelector(
@@ -24,6 +25,7 @@ export default function AuthenticatedLayout() {
           <AppSidebar />
           <SidebarInset>
             <Outlet />
+            <Toaster />
           </SidebarInset>
         </div>
       </SidebarProvider>

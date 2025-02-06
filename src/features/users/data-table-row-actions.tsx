@@ -20,6 +20,8 @@ import { roles } from './data/data'
 import { useDispatch } from 'react-redux'
 import { setOpen, setCurrentRow } from '@/store/slices/usersSlice'
 import { userSchema } from './data/schema'
+import { toast } from '@/hooks/use-toast'
+import { useUpdateUserMutation } from '@/services/api'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -29,6 +31,28 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const user = userSchema.parse(row.original)
+  const [updateUser] = useUpdateUserMutation()
+
+  const handleRoleChange = async (newRole: string) => {
+    try {
+      await updateUser({ 
+        id: user.id, 
+        data: { ...user, role: newRole } 
+      }).unwrap()
+      
+      toast({
+        title: "Role updated",
+        description: `User role has been updated to ${newRole}`,
+      })
+    } catch (error) {
+      console.error("Could not update user role", error);
+      toast({
+        title: "Error",
+        description: "Could not update user role",
+        variant: "destructive",
+      })
+    }
+  }
 
   const dispatch = useDispatch()
 
@@ -56,7 +80,10 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Roles</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={user.role}>
+            <DropdownMenuRadioGroup 
+              value={user.role}
+              onValueChange={handleRoleChange}
+            >
               {roles.map((role) => (
                 <DropdownMenuRadioItem key={role.value} value={role.value}>
                   {role.label}

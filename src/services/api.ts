@@ -11,7 +11,7 @@ export interface CreateUserDTO {
   email: string;
   firstName?: string;
   lastName?: string;
-  role: 'ADMIN' | 'USER' | 'GUEST';
+  role: string;
 }
 
 export interface LoginDTO {
@@ -130,6 +130,7 @@ export const api = createApi({
       return headers;
     },
   }),
+  tagTypes: ['User', 'Reservation', 'ParkingSpot', 'ParkingArea'],
   endpoints: (builder) => ({
     // ---------------------------
     // USERS endpoints
@@ -143,12 +144,14 @@ export const api = createApi({
         method: 'PUT',
         body: data,
       }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }]
     }),
     deleteUser: builder.mutation<void, number>({
       query: (id) => ({
         url: `users/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: () => [{ type: 'User', id: 'LIST' }]
     }),
     createUser: builder.mutation<User, CreateUserDTO>({
       query: (data) => ({
@@ -156,6 +159,7 @@ export const api = createApi({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: () => [{ type: 'User', id: 'LIST' }]
     }),
     loginUser: builder.mutation<User, LoginDTO>({
       query: (data) => ({
@@ -174,10 +178,18 @@ export const api = createApi({
         searchQueryParameter?: string;
       }
     >({
-      query: ({ page, size = 10, sortDirection = 'asc', searchQuery, searchQueryParameter }) => ({
+      query: ({ page, size = 50, sortDirection = 'asc', searchQuery, searchQueryParameter }) => ({
         url: `users/page/${page}`,
         params: { size, sortDirection, searchQuery, searchQueryParameter },
       }),
+      // This allows RTK Query to manage caching for each individual user as well as the list.
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.content.map(({ id }) => ({ type: 'User' as const, id })),
+              { type: 'User', id: 'LIST' },
+            ]
+          : [{ type: 'User', id: 'LIST' }],
     }),
 
     // ---------------------------
