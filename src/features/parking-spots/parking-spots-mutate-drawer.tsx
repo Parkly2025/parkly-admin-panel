@@ -29,7 +29,7 @@ import {
 // import { SelectDropdown } from '@/components/select-dropdown'
 import { ParkingSpot } from "@/features/parking-spots/data/schema";
 import { 
-  // useUpdateParkingSpotMutation, //FIXME
+  useUpdateParkingSpotMutation,
   useGetAllParkingAreasQuery, 
   useCreateParkingSpotMutation 
 } from "@/services/api";
@@ -54,7 +54,7 @@ export function ParkingSpotsMutateDrawer({
   currentRow,
 }: Props) {
   const isUpdate = !!currentRow;
-  // const [updateParkingSpot] = useUpdateParkingSpotMutation();
+  const [updateParkingSpot] = useUpdateParkingSpotMutation();
   const [createParkingSpot] = useCreateParkingSpotMutation();
 
   const { data: parkingAreas, error, isLoading }= useGetAllParkingAreasQuery({
@@ -76,19 +76,28 @@ export function ParkingSpotsMutateDrawer({
   });
 
   const onSubmit = async (data: ParkingSpotForm) => {
+    // console.log(data);
+    const parkingArea = await parkingAreas?.content.find(area => area.id === data.parkingAreaId);
+
+    if (!parkingArea) {
+      toast({
+        title: "Error",
+        description: "Selected parking area not found",
+        variant: "destructive"
+      });
+      return;
+    }
     try {
       // FIXME
       if (currentRow?.Id && isUpdate) {
-        // await updateParkingSpot({
-          // id: currentRow.Id,
-          // data: { 
-          //   id: currentRow.Id,
-          //   ...data 
-          //   // parkingArea: {
-
-          //   // }
-          // },
-        // }).unwrap();
+        await updateParkingSpot({
+          id: currentRow.Id,
+          data: { 
+            id: currentRow.Id,
+            ...data,
+            parkingArea: parkingArea
+          },
+        }).unwrap();
       } else {
         await createParkingSpot(data).unwrap();
       }
@@ -105,8 +114,10 @@ export function ParkingSpotsMutateDrawer({
     } catch (error) {
       console.error(error);
       toast({
-        title: "Error",
-        description: "Failed to process parking spot",
+        title: "Error. Failed to process parking spot",
+        description: (<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(error, null, 2)}</code>
+        </pre>),
         variant: "destructive",
       });
     }

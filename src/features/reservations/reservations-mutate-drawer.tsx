@@ -153,7 +153,7 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
         </SheetHeader>
         <Form {...form}>
           <form
-            id="tasks-form"
+            id="reservation-form"
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex-1 space-y-5"
           >
@@ -355,7 +355,7 @@ export function UsersMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           <SheetClose asChild>
             <Button variant="outline">Close</Button>
           </SheetClose>
-          <Button form="tasks-form" type="submit">
+          <Button form="reservation-form" type="submit">
             Save changes
           </Button>
         </SheetFooter>
