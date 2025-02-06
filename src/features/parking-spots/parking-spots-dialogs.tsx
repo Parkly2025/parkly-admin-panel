@@ -4,10 +4,41 @@ import { ParkingSpotsMutateDrawer } from './parking-spots-mutate-drawer'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/store'
 import { setOpen, setCurrentRow } from '@/store/slices/parkingSpotsSlice'
+import { useDeleteParkingSpotMutation } from '@/services/api'
 
 export function ParkingSpotsDialogs() {
   const dispatch = useDispatch()
   const { open, currentRow } = useSelector((state: RootState) => state.parkingSpots)
+  const [deleteParkingSpot] = useDeleteParkingSpotMutation()
+
+
+    const handleConfirm = async () => {
+      try {
+        if (currentRow?.Id) {
+          await deleteParkingSpot(currentRow.Id).unwrap()
+          toast({
+            title: 'Success. Reservation deleted successfully',
+            description: (
+              <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                <code className="text-white">
+                  {JSON.stringify(currentRow, null, 2)}
+                </code>
+              </pre>
+            )
+          })
+          dispatch(setCurrentRow(null))
+          dispatch(setOpen(null))
+        }
+      } catch (error) {
+        console.error("Error", error)
+        toast({
+          title: "Error",
+          description: "Failed to delete reservation",
+          variant: "destructive",
+        })
+      }
+    }
+  
 
   return (
     <>
@@ -22,7 +53,7 @@ export function ParkingSpotsDialogs() {
       {currentRow && (
         <>
           <ParkingSpotsMutateDrawer
-            key={`parking-spots-update-${currentRow.id}`}
+            key={`parking-spots-update-${currentRow.Id}`}
             open={open === 'update'}
             onOpenChange={() => {
               dispatch(setOpen('update'))
@@ -43,28 +74,13 @@ export function ParkingSpotsDialogs() {
                 dispatch(setCurrentRow(null))
               }, 500)
             }}
-            handleConfirm={() => {
-              dispatch(setOpen(null))
-              setTimeout(() => {
-                dispatch(setCurrentRow(null))
-              }, 500)
-              toast({
-                title: 'The following user has been deleted:',
-                description: (
-                  <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                      {JSON.stringify(currentRow, null, 2)}
-                    </code>
-                  </pre>
-                ),
-              })
-            }}
+            handleConfirm={handleConfirm}
             className="max-w-md"
-            title={`Delete this user: ${currentRow.id}?`}
+            title={`Delete this user: ${currentRow.Id}?`}
             desc={
               <>
                 You are about to delete a user with the ID{' '}
-                <strong>{currentRow.id}</strong>.<br />
+                <strong>{currentRow.Id}</strong>.<br />
                 This action cannot be undone.
               </>
             }

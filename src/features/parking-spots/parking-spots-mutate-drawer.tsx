@@ -26,6 +26,10 @@ import {
 } from "@/components/ui/sheet";
 // import { SelectDropdown } from '@/components/select-dropdown'
 import { ParkingSpot } from "@/features/parking-spots/data/schema";
+import { 
+  // useUpdateParkingSpotMutation, //FIXME
+  useCreateParkingSpotMutation 
+} from "@/services/api";
 
 interface Props {
   open: boolean;
@@ -47,6 +51,8 @@ export function ParkingSpotsMutateDrawer({
   currentRow,
 }: Props) {
   const isUpdate = !!currentRow;
+  // const [updateParkingSpot] = useUpdateParkingSpotMutation();
+  const [createParkingSpot] = useCreateParkingSpotMutation();
 
   const form = useForm<ParkingSpotForm>({
     resolver: zodResolver(formSchema),
@@ -57,18 +63,46 @@ export function ParkingSpotsMutateDrawer({
     },
   });
 
-  const onSubmit = (data: ParkingSpotForm) => {
-    // do something with the form data
-    onOpenChange(false);
+  const onSubmit = async (data: ParkingSpotForm) => {
+    try {
+      // FIXME
+      if (currentRow?.Id && isUpdate) {
+        // await updateParkingSpot({
+          // id: currentRow.Id,
+          // data: { 
+          //   id: currentRow.Id,
+          //   ...data 
+          //   // parkingArea: {
+
+          //   // }
+          // },
+        // }).unwrap();
+      } else {
+        await createParkingSpot(data).unwrap();
+      }
+
+      handleClose();
+      toast({
+        title: isUpdate ? "Parking Spot Updated" : "Parking Spot Created",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        )
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to process parking spot",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const handleClose = () => {
     form.reset();
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    onOpenChange(false);
   };
 
   return (

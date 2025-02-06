@@ -6,11 +6,11 @@ import { ParkingSpot } from './data/schema'
 
 export const columns: ColumnDef<ParkingSpot>[] = [
   {
-    accessorKey: 'id',
+    accessorKey: 'Id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Spot ID' />
     ),
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
+    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('Id')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
