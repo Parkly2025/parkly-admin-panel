@@ -30,9 +30,26 @@ export function DataTableToolbar<TData>({
             column={table.getColumn("parkingAreaId")}
             title="Parking Area"
             options={[
-              { value: "1", label: "Area 1" },
-              { value: "2", label: "Area 2" },
-              { value: "3", label: "Area 3" },
+              { value: "1", label: "Area A" },
+              { value: "2", label: "Area B" },
+              { value: "3", label: "Area C" },
+              { value: "4", label: "Area D" },
+              { value: "5", label: "Area E" },
+              { value: "6", label: "Area F" },
+              { value: "7", label: "Area G" },
+              { value: "8", label: "Area H" },
+              { value: "9", label: "Area I" },
+              { value: "10", label: "Area J" },
+              { value: "11", label: "Area K" },
+              { value: "12", label: "Area L" },
+              { value: "13", label: "Area M" },
+              { value: "14", label: "Area N" },
+              { value: "15", label: "Area O" },
+              { value: "16", label: "Area P" },
+              { value: "17", label: "Area Q" },
+              { value: "18", label: "Area R" },
+              { value: "19", label: "Area S" },
+              { value: "20", label: "Area T" },
             ]}
           />
         )}
