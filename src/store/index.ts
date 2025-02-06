@@ -6,6 +6,9 @@ import storage from 'redux-persist/lib/storage'; // Uses localStorage for web
 import authReducer from './slices/authSlice';
 import tasksReducer from './slices/tasksSlice';
 import usersReducer from './slices/usersSlice';
+import reservationsReducer from './slices/reservationsSlice';
+import parkingSpotsReducer from './slices/parkingSpotsSlice';
+import ParkingAreasReducer from './slices/parkingAreasSlice';
 
 import { api } from '../services/api';
 
@@ -19,6 +22,9 @@ const rootReducer = combineReducers({
   auth: authReducer,
   tasks: tasksReducer,
   users: usersReducer,
+  reservatios: reservationsReducer,
+  parkingSpots: parkingSpotsReducer,
+  parkingAreas: ParkingAreasReducer,
   [api.reducerPath]: api.reducer,
 });
 

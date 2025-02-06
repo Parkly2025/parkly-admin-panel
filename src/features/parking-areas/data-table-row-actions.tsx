@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 // import { useTasks } from '../context/tasks-context'
 import { useDispatch } from 'react-redux'
-import { setOpen, setCurrentRow } from '@/store/slices/reservationsSlice'
-import { reservationSchema } from './data/schema'
+import { setOpen, setCurrentRow } from '@/store/slices/parkingAreasSlice'
+import { parkingAreaSchema } from './data/schema'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -22,7 +22,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const reservation = reservationSchema.parse(row.original)
+  const parkingArea = parkingAreaSchema.parse(row.original)
 
   const dispatch = useDispatch()
 
@@ -40,7 +40,7 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem
           onClick={() => {
-            dispatch(setCurrentRow(reservation))
+            dispatch(setCurrentRow(parkingArea))
             dispatch(setOpen('update'))
           }}
         >
@@ -50,7 +50,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            dispatch(setCurrentRow(reservation))
+            dispatch(setCurrentRow(parkingArea))
             dispatch(setOpen('delete'))
           }}
         >

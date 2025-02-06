@@ -3,12 +3,12 @@ import { z } from 'zod'
 // We're keeping a simple non-relational schema here.
 // IRL, you will have a schema for your data models.
 export const reservationSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   parkingSpot: z.string(),
   userId: z.string(),
   startTime: z.string(),
   endTime: z.string(),
-  totalCost: z.string()
+  totalCost: z.number()
 })
 
 export type Reservation = z.infer<typeof reservationSchema>
